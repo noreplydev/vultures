@@ -1,3 +1,5 @@
+import "./globals.css"
+
 export default function Home() {
   return (
     <div className="h-screen w-screen flex  flex-col font-[family-name:var(--font-geist-sans)]">
@@ -7,7 +9,7 @@ export default function Home() {
         >VULTURES</h1>
         <button
           className="border border-solid border-white px-4 py-2
-            text-xs"
+            text-xs hover:bg-white hover:text-black"
         >
           DASHBOARD
         </button>
