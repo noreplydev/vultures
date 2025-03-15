@@ -1,5 +1,3 @@
-import "./globals.css"
-
 export default function Home() {
   return (
     <div className="h-screen w-screen flex  flex-col font-[family-name:var(--font-geist-sans)]">
