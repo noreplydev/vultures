@@ -1,6 +1,8 @@
 {
-  "dependencies": {
-    "lucide-react": "^0.482.0",
-    "react-pro-sidebar": "^1.1.0"
-  }
+  "workspaces": {
+    "packages": [
+      "packages/*"
+    ]
+  },
+  "dependencies": {}
 }
