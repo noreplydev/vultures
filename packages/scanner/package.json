@@ -2,7 +2,10 @@
   "name": "vulture-scanner",
   "version": "1.0.0",
   "main": "index.js",
-  "scripts": {},
+  "type": "module",
+  "scripts": {
+    "dev": "node --watch src/index.js"
+  },
   "keywords": [],
   "author": "",
   "license": "ISC",
