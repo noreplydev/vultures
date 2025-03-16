@@ -3,7 +3,7 @@ import path from 'path'
 import { fileURLToPath } from 'url';
 import { config as envConfig } from 'dotenv'
 import express from 'express'
-import { ScannerRouter } from './scanner.js';
+import { ScannerRouter } from './routers/index.js';
 const app = express()
 
 const __filename = fileURLToPath(import.meta.url);

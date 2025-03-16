@@ -1,6 +1,6 @@
 import { Router } from "express"
-import { getDomainRecords, isOwnedDomain } from "./lib/dns.js"
-import { responseError, response } from "./response.js";
+import { getDomainRecords, isOwnedDomain } from "../lib/dns.js"
+import { responseError, response } from "../response.js";
 
 export const ScannerRouter = Router()
 const DOMAIN_REGEX = /^(?=.{1,253}$)(?:(?!-)[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?\.)+(?:[a-zA-Z]{2,})$/;
