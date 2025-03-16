@@ -4,7 +4,7 @@ import { Sidebar } from "../Sidebar"
 export const DashboardSidebar = ({ menuItems, collapsed, onCollapse, onExpand }
   : { menuItems: any[], collapsed: boolean, onCollapse: () => void, onExpand: () => void }) => {
   return <div
-    className="relative flex flex-col w-[12vw] h-full
+    className="relative flex flex-col w-1/6 h-full
       justify-center items-center p-7 gap-6"
     style={{ backgroundColor: colors.backgroundSecondary }}
   >
