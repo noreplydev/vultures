@@ -1,4 +1,5 @@
 import { colors } from "@/theme/colors"
+import { CircleCheck } from "lucide-react";
 import { useEffect, useState } from "react"
 import UseAnimations from 'react-useanimations';
 import loading from 'react-useanimations/lib/loading'
@@ -24,7 +25,7 @@ export const Hosts = () => {
   }, [])
 
   return <div className="h-full w-full flex flex-col">
-    <div className="grid grid-cols-4 p-5">
+    <div className="grid grid-cols-4 p-5 gap-3">
       {
         hosts.length && hosts.map(host => {
           return <HostCard host={host['value']} />
@@ -45,7 +46,13 @@ const HostCard = ({ host }: { host: any }) => {
     </div>
     {
       host.verified
-        ? <p className="text-md font-extralight">{host.verified}</p>
+        ? <div className="flex flex-row gap-2 justify-start items-center">
+          <CircleCheck
+            color={colors.primary}
+            size={15}
+          />
+          <p className="text-md font-extralight">verified</p>
+        </div>
         : <div className="flex flex-row gap-2">
           <UseAnimations
             strokeColor="white"
