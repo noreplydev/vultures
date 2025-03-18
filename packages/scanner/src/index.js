@@ -1,10 +1,12 @@
 
 import path from 'path'
-import { fileURLToPath } from 'url';
+import { fileURLToPath } from 'url'
 import { config as envConfig } from 'dotenv'
 import express from 'express'
-import { HostsRouter, ScannerRouter } from './routers/index.js';
-import { initDatabases, initDb } from './db/index.js';
+import { HostsRouter, ScannerRouter } from './routers/index.js'
+import { initDatabases, initDb } from './db/index.js'
+import cors from 'cors'
+
 const app = express()
 
 const __filename = fileURLToPath(import.meta.url);
@@ -18,6 +20,9 @@ envConfig({
 initDatabases()
 
 // middlewares
+app.use(cors({
+  origin: "*"
+}))
 app.use(express.json())
 
 app.get("/hello-world", (req, res) => {
