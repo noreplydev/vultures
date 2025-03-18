@@ -1,3 +1,5 @@
+export const DefaultData = {}
+
 export const response = (res, data, message = "Ok") => {
   return res.status(200).json({
     data,

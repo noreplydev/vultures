@@ -5,7 +5,7 @@
 */
 
 import { Router } from "express"
-import { responseError, response } from "../response.js";
+import { responseError, response, DefaultData } from "../response.js";
 import { getDb } from "../db/index.js";
 
 export const HostsRouter = Router()
@@ -17,5 +17,15 @@ HostsRouter.get("/", async (req, res) => {
   response(res, { entries }, "Stored hosts")
 })
 
+HostsRouter.post("/", async (req, res) => {
+  const body = req.body
+  if (!body || !body.hostname) {
+    return responseError(res, 400, DefaultData, "Bad request")
+  }
+
+  const db = await getDb("host")
+  const insertion = await db.put(body.hostname, body)
+  response(res, { entry: insertion }, "Stored hosts")
+})
 
 

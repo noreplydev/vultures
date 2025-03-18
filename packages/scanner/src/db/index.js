@@ -6,7 +6,9 @@ const dbsPath = path.join(getDirname(), "..", "..", "..", "..", "databases")
 const entities = ["host"]
 
 export const initDb = async (entity) => {
-  const db = new Level(path.join(dbsPath, entity));
+  const db = new Level(path.join(dbsPath, entity), {
+    valueEncoding: 'json'
+  });
   return db;
 }
 

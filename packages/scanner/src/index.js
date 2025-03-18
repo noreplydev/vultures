@@ -17,6 +17,9 @@ envConfig({
 // initialize all databases
 initDatabases()
 
+// middlewares
+app.use(express.json())
+
 app.get("/hello-world", (req, res) => {
   return res.send("Hello world!")
 })
