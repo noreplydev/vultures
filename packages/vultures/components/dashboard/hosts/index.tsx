@@ -21,6 +21,8 @@ export const Hosts = () => {
           console.log(result)
           setHosts(result.data.entries)
         }
+      } else {
+        throw new Error("No api url provided")
       }
     }
 
