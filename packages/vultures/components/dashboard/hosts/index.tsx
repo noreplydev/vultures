@@ -3,8 +3,7 @@ import { ModalComponentTypes, ModalContainer, ModalProvider, useModal } from "@/
 import { colors } from "@/theme/colors"
 import { CircleCheck } from "lucide-react";
 import { useEffect, useState } from "react"
-import UseAnimations from 'react-useanimations';
-import loading from 'react-useanimations/lib/loading'
+import { Loading, UseAnimations } from "@/components/vultui/Icons";
 
 export const Hosts = () => {
   const [hosts, setHosts] = useState([])
@@ -83,7 +82,7 @@ const HostCard = ({ host }: { host: any }) => {
           <UseAnimations
             strokeColor="white"
             speed={0.7}
-            animation={loading}
+            animation={Loading}
           />
           <p className="text-md font-extralight">awaiting host verification</p>
         </div>
