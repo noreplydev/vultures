@@ -55,7 +55,7 @@ export const ModalProvider = ({ children }: { children: any }) => {
             alignItems: 'center',
             backgroundColor: translucent(colors.background),
           }} >
-          {modalContent({ onCancel: () => closeModal() })}
+          {React.createElement(modalContent, { onCancel: () => closeModal() })}
         </div>
       </div>
     }
