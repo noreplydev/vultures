@@ -5,3 +5,7 @@ export const colors = {
     backgroundSecondary: "#131313",
     backgroundHighlight: "#2C2A2A",
 }
+
+export const translucent = (hex: string) => {
+    return hex + "81"
+}

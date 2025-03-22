@@ -1,4 +1,4 @@
-import { colors } from "@/theme/colors"
+import { colors } from "@/theme"
 
 export const Button = ({ children, onClick }: { onClick: () => void } & any) => {
   return <button

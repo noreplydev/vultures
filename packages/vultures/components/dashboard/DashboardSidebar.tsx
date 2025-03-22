@@ -1,4 +1,4 @@
-import { colors } from "@/theme/colors"
+import { colors } from "@/theme"
 import { Sidebar } from "../Sidebar"
 
 export const DashboardSidebar = ({ menuItems, collapsed, onCollapse, onExpand }

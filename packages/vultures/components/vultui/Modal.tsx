@@ -1,4 +1,4 @@
-import { colors } from "@/theme/colors";
+import { colors, translucent } from "@/theme";
 import { atom, useAtom } from "jotai"
 import React, { ReactElement, useEffect } from "react"
 
@@ -49,19 +49,12 @@ export const ModalProvider = ({ children }: { children: any }) => {
           style={{
             height: "100%",
             width: "100%",
-            position: 'absolute',
-            top: '0px',
-            left: '0px',
-            backgroundColor: colors.background,
-            opacity: 0.5,
-            zIndex: 1
-          }} />
-        <div style={{
-          position: 'relative',
-          height: "100%",
-          width: "100%",
-          zIndex: 2
-        }} >
+            position: 'relative',
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            backgroundColor: translucent(colors.background),
+          }} >
           {modalContent({ onCancel: () => closeModal() })}
         </div>
       </div>
@@ -69,7 +62,7 @@ export const ModalProvider = ({ children }: { children: any }) => {
   </div >
 }
 
-export const ModalContainer = ({ children, style, parentStyle }: { children?: ReactElement, style?: {}, parentStyle?: {} }) => {
+export const ModalContainer = ({ children, style, parentStyle }: { children?: ReactElement[] | ReactElement, style?: {}, parentStyle?: {} }) => {
   return <div
     style={{
       position: "relative",
@@ -83,6 +76,7 @@ export const ModalContainer = ({ children, style, parentStyle }: { children?: Re
     }}
   >
     <div
+      onClick={(e) => { e.stopPropagation() }}
       style={{
         height: "fit-content",
         width: "fit-content",
