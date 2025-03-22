@@ -23,10 +23,10 @@ export function Dashboard() {
   }, [router.query])
 
   return <div className='flex flex-row w-full h-full'>
-    <DashboardSidebar
+    {/* <DashboardSidebar
       menuItems={items}
       collapsed={collapsed}
-    />
+    /> */}
     <Page name={page} />
   </div>
 }

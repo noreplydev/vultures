@@ -1,3 +1,5 @@
+import { Button } from "@/components/vultui";
+import { ModalComponentTypes, ModalContainer, ModalProvider, useModal } from "@/components/vultui/Modal";
 import { colors } from "@/theme/colors"
 import { CircleCheck } from "lucide-react";
 import { useEffect, useState } from "react"
@@ -6,6 +8,7 @@ import loading from 'react-useanimations/lib/loading'
 
 export const Hosts = () => {
   const [hosts, setHosts] = useState([])
+  const { openModal } = useModal()
 
   useEffect(() => {
     const getHosts = async () => {
@@ -24,15 +27,36 @@ export const Hosts = () => {
     getHosts()
   }, [])
 
-  return <div className="h-full w-full flex flex-col">
-    <div className="grid grid-cols-4 p-5 gap-3">
-      {
-        hosts.length && hosts.map(host => {
-          return <HostCard host={host['value']} />
-        })
-      }
+  const addHost = () => {
+    const AddHostModal = ({ onCancel }: ModalComponentTypes) => {
+      return <ModalContainer>
+        <button
+          onClick={onCancel}
+          className="cursor-pointer"
+        >close</button>
+      </ModalContainer>
+    }
+
+    openModal(AddHostModal)
+  }
+
+  return <ModalProvider>
+    <div className="h-full w-full flex flex-col p-6 gap-5">
+      <div className="flex flex-row gap-5">
+        <h1 className="text-5xl font-semibold">Servers</h1>
+        <Button onClick={addHost}>
+          add
+        </Button>
+      </div>
+      <div className="grid grid-cols-4 gap-3">
+        {
+          hosts.length && hosts.map(host => {
+            return <HostCard host={host['value']} />
+          })
+        }
+      </div>
     </div>
-  </div>
+  </ModalProvider>
 }
 
 const HostCard = ({ host }: { host: any }) => {
