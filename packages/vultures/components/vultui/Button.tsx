@@ -1,10 +1,11 @@
-import { colors } from "@/theme"
+import { c, colors } from "@/theme"
 
 export const Button = ({ children, onClick }: { onClick: () => void } & any) => {
   return <button
     onClick={onClick}
     style={{
-      backgroundColor: colors.secondary
+      backgroundColor: colors.secondary,
+      fontSize: c.sm.fontSize,
     }}
     className="rounded-md px-5 py-2 cursor-pointer
       transition-all ease-in-out duration-75 active:scale-95"

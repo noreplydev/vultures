@@ -78,6 +78,7 @@ export const ModalContainer = ({ children, style, parentStyle }: { children?: Re
     <div
       onClick={(e) => { e.stopPropagation() }}
       style={{
+        display: 'flex',
         height: "fit-content",
         width: "fit-content",
         paddingBlock: "5px",

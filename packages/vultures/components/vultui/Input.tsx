@@ -1,11 +1,13 @@
-import { colors, configs } from "@/theme"
+import { c, colors, configs } from "@/theme"
 
-export const Input = (props: any) => {
+export const Input = ({ style, placeholder, type }: any) => {
   return <input
     style={{
       backgroundColor: colors.backgroundHighlight,
-      borderRadius: "5px",
-      paddingInline: configs.sm.paddingInline,
-      paddingBlock: configs.sm.paddingBlock
-    }} {...props} />
+      borderRadius: c.sm.borderRadius,
+      paddingInline: c.sm.paddingInline,
+      paddingBlock: c.sm.paddingBlock,
+      fontSize: c.sm.fontSize,
+      ...style
+    }} placeholder={placeholder} type={type} />
 }
