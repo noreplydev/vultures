@@ -2,7 +2,7 @@ import { Button } from "@/components/vultui";
 import { ModalComponentTypes, ModalContainer, useModal } from "@/components/vultui/Modal";
 import { c, colors } from "@/theme"
 import { CircleCheck } from "lucide-react";
-import { useEffect, useState } from "react"
+import { useState } from "react"
 import { Loading, UseAnimations } from "@/components/vultui/Icons";
 import { Input } from "@/components/vultui/Input";
 import { Subtitle } from "@/components/vultui/Subtitle";
@@ -67,16 +67,18 @@ export const Hosts = ({ items, refresh }: { items: any[] | null, refresh: () => 
 
   return <div className="h-full w-full flex flex-col p-6 gap-5">
     <div className="flex flex-row gap-5">
-      <h1 className="text-5xl font-semibold">Servers</h1>
+      <h1 className="text-5xl font-semibold">Hosts</h1>
       <Button onClick={addHost}>
         add
       </Button>
     </div>
     <div className="grid grid-cols-4 gap-3">
       {
-        items && items.map(host => {
-          return <HostCard host={host['value']} />
-        })
+        items
+          ? items.sort((a, b) => a.value.createdAt - b.value.createdAt).map(host => {
+            return <HostCard host={host['value']} />
+          })
+          : <Subtitle>No hosts</Subtitle>
       }
     </div>
   </div>
@@ -103,7 +105,7 @@ const HostCard = ({ host }: { host: any }) => {
         : <div className="flex flex-row gap-2">
           <UseAnimations
             strokeColor="white"
-            speed={0.7}
+            speed={Math.random() * 0.97}
             animation={Loading}
           />
           <p className="text-md font-extralight">awaiting host verification</p>
