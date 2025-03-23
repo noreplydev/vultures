@@ -6,6 +6,8 @@ import express from 'express'
 import { HostsRouter, ScannerRouter } from './routers/index.js'
 import { initDatabases, initDb } from './db/index.js'
 import cors from 'cors'
+// queue
+import "./queue.js"
 
 const app = express()
 
