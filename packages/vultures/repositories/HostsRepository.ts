@@ -35,4 +35,20 @@ export class HostsRepository {
             return false
         }
     }
+
+    static async delete(apiPrefix: string, hostname: string): Promise<boolean> {
+        try {
+            const result: any = await fetch(apiPrefix + "/hosts/" + hostname, {
+                method: "DELETE",
+            })
+
+            if (result["isError"]) {
+                return false
+            }
+
+            return true
+        } catch (err) {
+            return false
+        }
+    }
 }

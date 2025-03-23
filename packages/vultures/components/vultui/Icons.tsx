@@ -5,6 +5,8 @@ export const UseAnimations = dynamic(() => import('react-useanimations'), {
 });
 
 import _Loading from 'react-useanimations/lib/loading'
+import _Trash from 'react-useanimations/lib/trash'
 
 
 export const Loading = _Loading
+export const Trash = _Trash

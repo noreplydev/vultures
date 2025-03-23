@@ -1,37 +1,13 @@
 import { Button } from "@/components/vultui";
 import { ModalComponentTypes, ModalContainer, useModal } from "@/components/vultui/Modal";
 import { c, colors } from "@/theme"
-import { CircleCheck } from "lucide-react";
+import { CircleCheck, Trash2 } from "lucide-react";
 import { useState } from "react"
-import { Loading, UseAnimations } from "@/components/vultui/Icons";
+import { Loading, Trash, UseAnimations } from "@/components/vultui/Icons";
 import { Input } from "@/components/vultui/Input";
 import { Subtitle } from "@/components/vultui/Subtitle";
 import { HostsRepository } from "@/repositories/HostsRepository";
 import { getApiPrefix } from "@/utils/api";
-
-export const Hosts = ({ items, refresh }: { items: any[] | null, refresh: () => void }) => {
-  const { openModal } = useModal()
-
-  const addHost = () => openModal((props) => AddHostModal({ refresh, ...props }))
-
-  return <div className="h-full w-full flex flex-col py-12 px-[10vw] gap-5">
-    <div className="flex flex-row gap-5">
-      <h1 className="text-5xl font-semibold">Hosts</h1>
-      <Button onClick={addHost}>
-        add
-      </Button>
-    </div>
-    <div className="grid grid-cols-1 gap-3 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-4 2xl:grid-cols-5">
-      {
-        items
-          ? items.sort((a, b) => a.value.createdAt - b.value.createdAt).map(host => {
-            return <HostCard host={host['value']} />
-          })
-          : <Subtitle>No hosts</Subtitle>
-      }
-    </div>
-  </div>
-}
 
 const AddHostModal = ({ onCancel, refresh }: ModalComponentTypes & any) => {
   const [hostname, setHostname] = useState("")
@@ -84,14 +60,29 @@ const AddHostModal = ({ onCancel, refresh }: ModalComponentTypes & any) => {
   </ModalContainer>
 }
 
-const HostCard = ({ host }: { host: any }) => {
+const HostCard = ({ host, refresh }: { host: any, refresh: () => void }) => {
   return <div
     style={{ backgroundColor: colors.backgroundSecondary }}
-    className="h-full w-full flex flex-col px-5 py-3 rounded-sm gap-5"
+    className="h-full w-full flex flex-col px-3 py-3 rounded-sm gap-5"
   >
     <div className="flex flex-col">
-      <p className="text-xl font-semibold">{host.hostname}</p>
-      <p className="text-md font-extralight">{host.value}</p>
+      <div className="flex flex-row justify-between gap-4">
+        <p className="text-xl font-semibold">{host.hostname}</p>
+        <button
+          onMouseEnter={(e) => e.currentTarget.style.backgroundColor = colors.backgroundHighlight}
+          onMouseLeave={(e) => e.currentTarget.style.backgroundColor = "transparent"}
+          style={{
+            borderRadius: c.sm.borderRadius
+          }}
+          className={"grid place-items-center p-2 cursor-pointer"}
+          onClick={() => HostsRepository.delete(getApiPrefix(), host.hostname).then(() => refresh())}
+        >
+          <Trash2
+            className="text-gray-600"
+            size={15}
+          />
+        </button>
+      </div>
     </div>
     {
       host.verified
@@ -111,5 +102,29 @@ const HostCard = ({ host }: { host: any }) => {
           <p className="text-md font-extralight">verifying</p>
         </div>
     }
+  </div>
+}
+
+export const Hosts = ({ items, refresh }: { items: any[] | null, refresh: () => void }) => {
+  const { openModal } = useModal()
+
+  const addHost = () => openModal((props) => AddHostModal({ refresh, ...props }))
+
+  return <div className="h-full w-full flex flex-col py-12 px-[10vw] gap-5">
+    <div className="flex flex-row gap-5">
+      <h1 className="text-5xl font-semibold">Hosts</h1>
+      <Button onClick={addHost}>
+        add
+      </Button>
+    </div>
+    <div className="grid grid-cols-1 gap-3 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-4 2xl:grid-cols-5">
+      {
+        items
+          ? items.sort((a, b) => a.value.createdAt - b.value.createdAt).map(host => {
+            return <HostCard host={host['value']} refresh={refresh} />
+          })
+          : <Subtitle>No hosts</Subtitle>
+      }
+    </div>
   </div>
 }

@@ -28,4 +28,12 @@ HostsRouter.post("/", async (req, res) => {
   response(res, { entry: insertion }, "Stored hosts")
 })
 
+HostsRouter.delete("/:hostname", async (req, res) => {
+  const hostname = req.params.hostname
+  const db = await getDb("host")
+  const insertion = await db.delete(hostname)
+  response(res, { entry: insertion }, "Stored hosts")
+})
+
+
 
