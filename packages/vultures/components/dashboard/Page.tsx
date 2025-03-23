@@ -1,8 +1,8 @@
-import { Hosts } from "./hosts"
+import { HostsPage } from "./hosts"
 
 export const Page = ({ name }: { name: String }) => {
   if (name === "hosts") {
-    return <Hosts />
+    return <HostsPage />
   }
 
   return <div className="h-full w-full flex 

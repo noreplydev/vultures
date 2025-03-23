@@ -13,7 +13,7 @@ export const useModal = () => {
   const [showModal, setShowModal] = useAtom(ModalVisibilityAtom)
   const [modalContent, setModalContent] = useAtom(ModalContentAtom)
 
-  const openModal = (component: ({ onCancel }: ModalComponentTypes) => ReactElement) => {
+  const openModal = (component: ({ onCancel }: ModalComponentTypes & any) => ReactElement) => {
     setModalContent(() => component);
     setShowModal(true);
   };
