@@ -30,12 +30,21 @@ HostsRouter.post("/", async (req, res) => {
   response(res, { entry: insertion }, "Stored hosts")
 })
 
+HostsRouter.get("/:hostname", async (req, res) => {
+  const hostname = req.params.hostname
+  const db = await getDb("host")
+  const insertion = await db.get(hostname)
+  response(res, { entry: insertion }, "Getted host")
+})
+
 HostsRouter.delete("/:hostname", async (req, res) => {
   const hostname = req.params.hostname
   const db = await getDb("host")
   const insertion = await db.delete(hostname)
-  response(res, { entry: insertion }, "Stored hosts")
+  response(res, { entry: insertion }, "Delete hosts")
 })
+
+
 
 
 
