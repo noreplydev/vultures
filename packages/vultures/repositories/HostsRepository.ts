@@ -51,4 +51,20 @@ export class HostsRepository {
             return false
         }
     }
+
+    static async scan(apiPrefix: string, hostname: string): Promise<boolean> {
+        try {
+            const result: any = await fetch(apiPrefix + "/scanner/services/" + hostname, {
+                method: "GET",
+            })
+
+            if (result["isError"]) {
+                return false
+            }
+
+            return true
+        } catch (err) {
+            return false
+        }
+    }
 }
