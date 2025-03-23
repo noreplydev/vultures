@@ -9,11 +9,16 @@ import { Subtitle } from "@/components/vultui/Subtitle";
 import { HostsRepository } from "@/repositories/HostsRepository";
 import { getApiPrefix } from "@/utils/api";
 
+const DOMAIN_REGEX = /^(?=.{1,253}$)(?:(?!-)[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?\.)+(?:[a-zA-Z]{2,})$/;
+
 const AddHostModal = ({ onCancel, refresh }: ModalComponentTypes & any) => {
   const [hostname, setHostname] = useState("")
   const [creating, setCreating] = useState(false)
 
   const createHost = async () => {
+    if (!DOMAIN_REGEX.test(hostname)) {
+      return
+    }
     const created = await HostsRepository.create(getApiPrefix(), hostname)
     if (!created) {
       throw new Error("Host not created")
@@ -121,7 +126,7 @@ export const Hosts = ({ items, refresh }: { items: any[] | null, refresh: () => 
       {
         items
           ? items.sort((a, b) => a.value.createdAt - b.value.createdAt).map(host => {
-            return <HostCard host={host['value']} refresh={refresh} />
+            return <HostCard key={host.key} host={host['value']} refresh={refresh} />
           })
           : <Subtitle>No hosts</Subtitle>
       }
