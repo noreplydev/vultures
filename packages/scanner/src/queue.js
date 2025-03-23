@@ -1,10 +1,28 @@
 import { Worker, Queue } from 'bullmq';
+import { getServices, scanHost } from './lib/nmap.js';
+import { getDb } from './db/index.js';
 
 const worker = new Worker(
   'scans',
   async job => {
-    const hostname = job.name
-    console.log("hostname: ", hostname)
+    try {
+      const hostname = job.name
+      console.log("scanning host:", hostname)
+
+      const { isError, scan } = await scanHost(hostname)
+      if (isError) return
+      const services = getServices(scan.nmaprun.host)
+
+      const db = await getDb("host")
+      const host = await db.get(hostname)
+      host['services'] = services
+
+      // update entity
+      await db.put(host.hostname, host)
+      console.log("scan end of host:", hostname)
+    } catch (err) {
+      console.log("Error scanning host: ", err)
+    }
   },
   {
     connection: {

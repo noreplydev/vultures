@@ -8,6 +8,7 @@ import { Input } from "@/components/vultui/Input";
 import { Subtitle } from "@/components/vultui/Subtitle";
 import { HostsRepository } from "@/repositories/HostsRepository";
 import { getApiPrefix } from "@/utils/api";
+import { HostView } from "./Host";
 
 const DOMAIN_REGEX = /^(?=.{1,253}$)(?:(?!-)[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?\.)+(?:[a-zA-Z]{2,})$/;
 
@@ -66,9 +67,13 @@ const AddHostModal = ({ onCancel, refresh }: ModalComponentTypes & any) => {
 }
 
 const HostCard = ({ host, refresh }: { host: any, refresh: () => void }) => {
+  const { openModal } = useModal()
   return <div
     style={{ backgroundColor: colors.backgroundSecondary }}
-    className="h-full w-full flex flex-col px-3 py-3 rounded-sm gap-5"
+    onMouseEnter={(e) => e.currentTarget.style.border = "1px solid " + colors.backgroundHighlight}
+    onMouseLeave={(e) => e.currentTarget.style.border = "1px solid transparent"}
+    className="h-full w-full flex flex-col px-3 py-3 rounded-sm gap-5 cursor-pointer"
+    onClick={() => openModal(() => HostView({ host }))}
   >
     <div className="flex flex-col">
       <div className="flex flex-row justify-between gap-4">
@@ -80,7 +85,10 @@ const HostCard = ({ host, refresh }: { host: any, refresh: () => void }) => {
             borderRadius: c.sm.borderRadius
           }}
           className={"grid place-items-center p-2 cursor-pointer"}
-          onClick={() => HostsRepository.delete(getApiPrefix(), host.hostname).then(() => refresh())}
+          onClick={async (e) => {
+            e.stopPropagation()
+            await HostsRepository.delete(getApiPrefix(), host.hostname).then(() => refresh())
+          }}
         >
           <Trash2
             className="text-gray-600"
