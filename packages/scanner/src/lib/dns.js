@@ -26,3 +26,12 @@ export const getDomainRecords = async (domain) => {
     return null
   }
 }
+
+export const getIps = async (domain) => {
+  try {
+    return await dns.lookup(domain, { family: 4 });
+  } catch (err) {
+    console.error(`Error resolving domain ${domain}: ${err}`);
+    return null
+  }
+}
