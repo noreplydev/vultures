@@ -1,9 +1,9 @@
-import { Router } from "express"
 import { getDomainRecords, isOwnedDomain } from "../lib/dns.js"
 import { responseError, response } from "../response.js";
 import { addScanJob } from "../queue.js";
+import { app } from "../app.js";
 
-export const ScannerRouter = Router()
+export const ScannerRouter = app()
 const DOMAIN_REGEX = /^(?=.{1,253}$)(?:(?!-)[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?\.)+(?:[a-zA-Z]{2,})$/;
 
 // /api/v1/scanner

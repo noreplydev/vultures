@@ -1,7 +1,8 @@
 {
   "workspaces": {
     "packages": [
-      "packages/*"
+      "packages/*",
+      "apps/*"
     ]
   },
   "dependencies": {}

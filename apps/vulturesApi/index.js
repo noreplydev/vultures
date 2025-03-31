@@ -3,11 +3,11 @@ import path from 'path'
 import { fileURLToPath } from 'url'
 import { config as envConfig } from 'dotenv'
 import express from 'express'
-import { HostsRouter, ScannerRouter } from './routers/index.js'
-import { initDatabases, initDb } from './db/index.js'
+import { CveRouter, HostsRouter, ScannerRouter } from 'vultures-api/src/routers/index.js'
+import { initDatabases, initDb } from 'vultures-api/src/db/index.js'
 import cors from 'cors'
 // queue
-import "./queue.js"
+import "vultures-api/src/queue.js"
 
 const app = express()
 
@@ -15,7 +15,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 envConfig({
-  path: path.join(__dirname, "..", "..", "..", ".env")
+  path: path.join(__dirname, "..", "..", ".env")
 })
 
 // initialize all databases
@@ -27,13 +27,14 @@ app.use(cors({
 }))
 app.use(express.json())
 
-app.get("/hello-world", (req, res) => {
+app.get("/helloworld", (req, res) => {
   return res.send("Hello world!")
 })
 
 app.use("/api/v1/scanner", ScannerRouter)
 app.use("/api/v1/hosts", HostsRouter)
+app.use("/api/v1/cve", CveRouter)
 
 app.listen(process.env.SCANNER_API_PORT, () => {
-  console.log("Vultures scanner running")
+  console.log("Vultures scanner running on port: ", process.env.SCANNER_API_PORT)
 })

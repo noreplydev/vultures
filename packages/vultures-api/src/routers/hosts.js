@@ -4,12 +4,12 @@
   modeling system. 
 */
 
-import { Router } from "express"
 import { responseError, response, DefaultData } from "../response.js";
 import { getDb } from "../db/index.js";
 import { getIps } from "../lib/dns.js";
+import { app } from "../app.js";
 
-export const HostsRouter = Router()
+export const HostsRouter = app()
 
 // /api/v1/hosts
 HostsRouter.get("/", async (req, res) => {
