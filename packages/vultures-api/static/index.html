@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8">
+  <title>vultures</title>
+  <meta name="keywords" content="cybersecurity, vultures, cve">
+  <meta name="description" content="">
+  <style>
+    * {
+      margin: 0px;
+      padding: 0px;
+    }
+
+    body {
+      font-family: monospace;
+      height: 100vh;
+      width: 100vw;
+      background-color: black;
+      color: white;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      overflow: hidden;
+    }
+
+    #title {
+      position: fixed;
+      top: 20px;
+    }
+
+    #output {
+      height: 100vh;
+      white-space: pre;
+      font-size: 10px;
+      line-height: 10px;
+    }
+
+    @media (max-width: 1000px) {
+      #output {
+        scale: 1.3;
+        height: fit-content;
+      }
+    }
+
+    @media (min-width: 1001px) {
+      #output {
+        scale: 0.7;
+      }
+    }
+
+    @media (min-width: 2300px) {
+      #output {
+        scale: 0.5;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <!-- canvas to process image -->
+  <canvas id="canvas" style="display: none;"></canvas>
+  <pre id="title">vultures.dev</pre>
+  <!-- image render on text -->
+  <pre id="output"></pre>
+
+  <script>
+    const chars = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz!@#$%^&*()-_=+[]{};:'\",.<>/?\\|`~";
+
+    function processImage() {
+      const img = new Image();
+      img.src = 'static/david.png';
+
+      img.onload = function () {
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+
+        const originalWidth = img.width;
+        const originalHeight = img.height;
+        const newWidth = Math.round(originalWidth / 5);
+        const newHeight = Math.round(originalHeight / 7);
+        canvas.width = newWidth;
+        canvas.height = newHeight;
+
+        // paint image to get data
+        ctx.drawImage(img, 0, 0, newWidth, newHeight);
+        const imageData = ctx.getImageData(0, 0, newWidth, newHeight);
+        const data = imageData.data;
+
+        const pixelMatrix = []; // bw pixel array
+        for (let i = 0; i < newHeight; i++) {
+          const row = [];
+          for (let j = 0; j < newWidth; j++) {
+            const index = (i * newWidth + j) * 4;
+            const r = data[index],
+              g = data[index + 1],
+              b = data[index + 2];
+            const gray = 0.2126 * r + 0.7152 * g + 0.0722 * b;
+            const bw = gray > 128 ? 255 : 0;
+            row.push(bw);
+          }
+          pixelMatrix.push(row);
+        }
+
+        let output = "";
+        const outputElement = document.getElementById('output');
+        let rowIndex = 0;
+
+        function processRow() {
+          if (rowIndex < pixelMatrix.length) {
+            let line = "";
+            for (let pixel of pixelMatrix[rowIndex]) {
+              if (pixel === 255) { // white
+                const randomIndex = Math.floor(Math.random() * chars.length);
+                line += chars[randomIndex];
+              } else { // blackj
+                line += " ";
+              }
+            }
+            output += line + "\n";
+            outputElement.textContent = output;
+            rowIndex++;
+
+            setTimeout(processRow, 20); // wait to print line
+          } else {
+            textArray = document.getElementById('output').innerText.split('');
+          }
+        }
+        processRow();
+      };
+
+      img.onerror = function () {
+        console.error("No se pudo cargar la imagen. Asegúrate de que 'david.png' esté en el directorio correcto.");
+      };
+    }
+    processImage();
+
+    // update text
+    let textArray = [];
+    const outputElement = document.getElementById('output');
+    function updateText() {
+      if (textArray.length === 0) {
+        requestAnimationFrame(updateText);
+        return
+      }
+
+      for (let i = 0; i < textArray.length; i++) {
+        if (Math.random() < 0.05 && textArray[i] !== "\n" && textArray[i] !== " ") { // 5% de probabilidad de cambio por carácter
+          textArray[i] = chars[Math.floor(Math.random() * chars.length)];
+        }
+      }
+
+      outputElement.innerText = textArray.join('');
+      requestAnimationFrame(updateText);
+    }
+
+    requestAnimationFrame(updateText);
+  </script>
+</body>
+
+</html>
