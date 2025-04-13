@@ -29,7 +29,6 @@ app.use(express.json())
 
 const publicFolder = path.join(__dirname, "..", "..", "packages", "vultures-api", "static")
 app.use("/static", express.static(publicFolder))
-app.use("/", (req, res) => res.sendFile(path.join(publicFolder, "index.html")))
 
 app.get("/helloworld", (req, res) => {
   return res.send("Hello world!")
@@ -38,6 +37,7 @@ app.get("/helloworld", (req, res) => {
 app.use("/api/v1/scanner", ScannerRouter)
 app.use("/api/v1/hosts", HostsRouter)
 app.use("/api/v1/cve", CveRouter)
+app.use("/", (req, res) => res.sendFile(path.join(publicFolder, "index.html")))
 
 app.listen(process.env.SCANNER_API_PORT, () => {
   console.log("Vultures scanner running on port: ", process.env.SCANNER_API_PORT)
