@@ -100,7 +100,10 @@
 
     function processImage() {
       const img = new Image();
-      img.src = 'static/david.png';
+      const imgUrl = document.location.pathname.split("/")[1]
+        ? new URL("static/david.png", document.location.href + "/").toString()
+        : "static/david.png"
+      img.src = imgUrl;
 
       img.onload = function () {
         const canvas = document.getElementById('canvas');

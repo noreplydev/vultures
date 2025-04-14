@@ -1,9 +1,10 @@
 {
-  "name": "vultures-api-app",
+  "name": "proxy",
   "version": "1.0.0",
   "main": "index.js",
   "type": "module",
   "scripts": {
+    "prod": "PROD=true node index.js",
     "dev": "node --watch index.js"
   },
   "keywords": [],
@@ -11,11 +12,7 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
-    "bullmq": "^5.44.3",
-    "cors": "^2.8.5",
-    "dotenv": "^16.4.7",
-    "express": "4.21.2",
-    "level": "^9.0.0",
-    "xml2json": "^0.12.0"
+    "express": "^5.1.0",
+    "http-proxy-middleware": "^3.0.5"
   }
 }
