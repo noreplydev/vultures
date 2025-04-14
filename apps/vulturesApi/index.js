@@ -30,13 +30,9 @@ app.use(express.json())
 const publicFolder = path.join(__dirname, "..", "..", "packages", "vultures-api", "static")
 app.use("/static", express.static(publicFolder))
 
-app.get("/helloworld", (req, res) => {
-  return res.send("Hello world!")
-})
-
 app.use("/api/v1/scanner", ScannerRouter)
 app.use("/api/v1/hosts", HostsRouter)
-app.use("/api/v1/cve", CveRouter)
+app.use("/api/v0/cve", CveRouter)
 app.use("/", (req, res) => res.sendFile(path.join(publicFolder, "index.html")))
 
 app.listen(process.env.SCANNER_API_PORT, () => {
