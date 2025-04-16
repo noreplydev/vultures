@@ -1,12 +1,12 @@
 import { c, colors } from "@/theme"
 
-export const Button = ({ children, onClick }: { onClick: () => void } & any) => {
+export const Button = ({ children, onClick, translucent }: { onClick: () => void } & any) => {
   return <button
     onClick={onClick}
     style={{
-      backgroundColor: colors.background,
+      backgroundColor: translucent ? colors.background + "81" : colors.background,
       fontSize: c.sm.fontSize,
-      borderColor: colors.primary
+      borderColor: colors.primary,
     }}
     onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = colors.primary; e.currentTarget.style.color = colors.background }}
     onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = colors.background; e.currentTarget.style.color = colors.primary }}
