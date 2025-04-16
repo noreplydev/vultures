@@ -6,7 +6,7 @@ import { Page } from './Page';
 
 export function Dashboard() {
   const [collapsed, setCollapsed] = useState(false);
-  const [page, setPage] = useState<string>("hosts")
+  const [page, setPage] = useState<string>("cve")
   const router = useRouter()
   const items = [
     {

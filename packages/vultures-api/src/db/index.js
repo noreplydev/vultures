@@ -29,6 +29,22 @@ export const getDb = async (entity) => {
 
       return entries
     }),
+    getPage: async ({ startKey, limit, reverse }) => await useDb(entity, async (db) => {
+      const entries = [];
+      const iteratorOptions = { limit, reverse };
+
+      if (startKey) { // if startkey is passed start from there 
+        if (reverse) {
+          iteratorOptions.lt = startKey;
+        } else {
+          iteratorOptions.gt = startKey;
+        }
+      }
+      for await (const [key, value] of db.iterator(iteratorOptions)) {
+        entries.push({ key, value });
+      }
+      return entries;
+    }),
     get: async (key) => await useDb(entity, async (db) => {
       try {
         const value = await db.get(key);
