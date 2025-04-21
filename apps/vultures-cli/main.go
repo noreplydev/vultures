@@ -4,6 +4,8 @@ import (
 	"encoding/json"
 	"flag"
 	"fmt"
+	"io"
+	"net/http"
 	"os"
 	"regexp"
 	"vultures-cli/utils"
@@ -44,14 +46,49 @@ func main() {
 	case "scan":
 		scanCmd.Parse(os.Args[2:]) // parse if commands params were required
 		binariesReportData := scan(path)
-		dataJson, _ := json.MarshalIndent(binariesReportData, "", "  ")
 		if len(outpath) > 0 {
+			dataJson, _ := json.MarshalIndent(binariesReportData, "", "  ")
 			os.WriteFile(outpath, []byte(dataJson), 0770)
-		} else {
-			println(string(dataJson))
-			println()
-			println("! avoid stdout report print using -out ")
 		}
+
+		// get each binary cves
+		for _, bin := range binariesReportData.BinariesData {
+			requestURL := fmt.Sprintf("https://vultures.dev/api/v0/cve/search?query=%s", bin.BinName)
+			res, err := http.Get(requestURL)
+			if err != nil {
+				fmt.Printf(" %s\n", err)
+				os.Exit(1)
+			}
+
+			resBody, err := io.ReadAll(res.Body)
+			if err != nil {
+				fmt.Printf("│ 🞫 %s\n", err)
+				os.Exit(1)
+			}
+
+			type VulturesResponse struct {
+				Data struct {
+					Entries []string `json:"entries"`
+				} `json:"data"`
+				Message string `json:"message"`
+				IsError bool   `json:"isError"`
+			}
+
+			var response VulturesResponse
+			json.Unmarshal(resBody, &response)
+			if len(response.Data.Entries) > 0 {
+				fmt.Printf("⚠ %s \n", bin.BinName)
+				for _, cve := range response.Data.Entries {
+					fmt.Printf("  - %s \n", cve)
+				}
+			} else {
+				fmt.Printf("✓ %s \n", bin.BinName)
+			}
+		}
+
+		println("")
+		println("total binaries: ", binariesReportData.TotalBinaries)
+		println("versioned binaries: ", binariesReportData.VersionedBinaries)
 
 	default:
 		fmt.Printf("Unknown command: %s\n", os.Args[1])
@@ -102,8 +139,6 @@ func scan(path string) VulturesBinariesReport {
 	versionedBinaries := utils.Filter(binariesData, func(b Bin) bool {
 		return b.VersionString != "unknown"
 	})
-	println("total binaries: ", len(totalBinaries))
-	println("versioned binaries: ", len(versionedBinaries))
 
 	return VulturesBinariesReport{
 		TotalBinaries:     len(totalBinaries),
