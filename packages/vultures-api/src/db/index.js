@@ -5,31 +5,41 @@ import { getDirname } from '../utils/environment.js';
 const dbsPath = path.join(getDirname(), "..", "..", "..", "..", "databases")
 const entities = ["host", "cve"]
 
-export const initDb = async (entity) => {
+export const initDb = async (entity, encoding) => {
   const db = new Level(path.join(dbsPath, entity), {
-    valueEncoding: 'json'
+    valueEncoding: encoding ?? 'json'
   });
   return db;
 }
 
-export const initDatabases = () => {
+export const initDatabases = (encoding) => {
   return entities.map(async entity => {
-    const db = await initDb(entity)
+    const db = await initDb(entity, encoding)
     await db.close()
   })
 }
 
-export const getDb = async (entity) => {
+export const getDb = async (entity, encoding) => {
+  const useDb = async (op) => _useDb(entity, op, encoding)
+
   return {
-    getAll: async () => await useDb(entity, async (db) => {
+    getAll: async () => await useDb(async (db) => {
       const entries = []
       for await (const [key, value] of db.iterator()) {
         entries.push({ key, value })
       }
-
       return entries
     }),
-    getPage: async ({ startKey, limit, reverse }) => await useDb(entity, async (db) => {
+    getIf: async (filter) => await useDb(async (db) => {
+      const entries = []
+      for await (const [key, value] of db.iterator()) {
+        if (filter(key, value)) {
+          entries.push({ key, value })
+        }
+      }
+      return entries
+    }),
+    getPage: async ({ startKey, limit, reverse }) => await useDb(async (db) => {
       const entries = [];
       const iteratorOptions = { limit, reverse };
 
@@ -45,7 +55,7 @@ export const getDb = async (entity) => {
       }
       return entries;
     }),
-    get: async (key) => await useDb(entity, async (db) => {
+    get: async (key) => await useDb(async (db) => {
       try {
         const value = await db.get(key);
         return value;
@@ -57,7 +67,7 @@ export const getDb = async (entity) => {
         throw error;
       }
     }),
-    put: async (key, value, update) => await useDb(entity, async (db) => {
+    put: async (key, value, update) => await useDb(async (db) => {
       try {
         await db.put(key, value);
         return value;
@@ -65,7 +75,7 @@ export const getDb = async (entity) => {
         throw error;
       }
     }),
-    delete: async (key) => await useDb(entity, async (db) => {
+    delete: async (key) => await useDb(async (db) => {
       try {
         await db.del(key);
         return true;
@@ -79,8 +89,8 @@ export const getDb = async (entity) => {
   }
 }
 
-const useDb = async (entity, operation) => {
-  const db = await initDb(entity)
+const _useDb = async (entity, operation, encoding) => {
+  const db = await initDb(entity, encoding)
   await db.open();
   try {
     return await operation(db);

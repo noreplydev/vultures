@@ -4,6 +4,24 @@ import { DefaultData, response, responseError } from "../response.js";
 
 export const CveRouter = app()
 
+CveRouter.get("/search", async (req, res) => {
+  const query = req.query.query
+
+  if (!query) {
+    return responseError(res, 400, DefaultData, "Bad request, no query provided")
+  }
+
+  try {
+    const db = await getDb("cve_titles", "utf8")
+    const entries = await db.getIf((key, value) => key.includes(String(query).toLowerCase()))
+    const cves = entries.map(entry => entry.value)
+    return response(res, { entries: cves }, "Stored cves")
+  } catch (err) {
+    console.error("Error processing /api/v0/cve: ", err)
+    return responseError(res, 500, DefaultData, "Internal server error")
+  }
+})
+
 CveRouter.get("/:id", async (req, res) => {
   try {
     const cveId = req.params.id
@@ -42,4 +60,3 @@ CveRouter.get("/", async (req, res) => {
     return responseError(res, 500, DefaultData, "Internal server error")
   }
 })
-
