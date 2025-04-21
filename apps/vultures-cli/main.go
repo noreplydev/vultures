@@ -89,7 +89,9 @@ func scan(path string) VulturesBinariesReport {
 		result := getBinVersion(bin)
 		if len(result) > 0 {
 			versions := r.FindAllString(result, -1)
-			binariesData = append(binariesData, Bin{BinName: bin, VersionString: result, InferredVersion: versions[0], Versions: versions})
+			if len(versions) > 0 {
+				binariesData = append(binariesData, Bin{BinName: bin, VersionString: result, InferredVersion: versions[0], Versions: versions})
+			}
 		} else {
 			binariesData = append(binariesData, Bin{BinName: bin, VersionString: "unknown"})
 		}
