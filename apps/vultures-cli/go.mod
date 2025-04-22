@@ -1,3 +1,3 @@
-module vultures-cli
+module vultures
 
 go 1.22.2

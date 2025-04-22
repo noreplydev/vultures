@@ -8,7 +8,7 @@ import (
 	"net/http"
 	"os"
 	"regexp"
-	"vultures-cli/utils"
+	"vultures/utils"
 )
 
 type Bin struct {
