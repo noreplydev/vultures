@@ -11,17 +11,23 @@ import (
 	"vultures/utils"
 )
 
+type CveMatch struct {
+	Id        string `json:"id"`
+	MatchType string `json:"matchType"`
+}
+
 type Bin struct {
-	BinName         string
-	VersionString   string
-	InferredVersion string
-	Versions        []string
+	BinName         string     `json:"binName"`
+	VersionString   string     `json:"versionString"`
+	InferredVersion string     `json:"inferredVersion"`
+	Versions        []string   `json:"versions"`
+	Cves            []CveMatch `json:"cves"`
 }
 
 type VulturesBinariesReport struct {
-	TotalBinaries     int
-	VersionedBinaries int
-	BinariesData      []Bin
+	TotalBinaries     int   `json:"totalBinaries"`
+	VersionedBinaries int   `json:"versionedBinaries"`
+	BinariesData      []Bin `json:"binariesData"`
 }
 
 func main() {
@@ -46,13 +52,9 @@ func main() {
 	case "scan":
 		scanCmd.Parse(os.Args[2:]) // parse if commands params were required
 		binariesReportData := scan(path)
-		if len(outpath) > 0 {
-			dataJson, _ := json.MarshalIndent(binariesReportData, "", "  ")
-			os.WriteFile(outpath, []byte(dataJson), 0770)
-		}
 
 		// get each binary cves
-		for _, bin := range binariesReportData.BinariesData {
+		for i, bin := range binariesReportData.BinariesData {
 			requestURL := fmt.Sprintf("https://vultures.dev/api/v0/cve/search?query=%s", bin.BinName)
 			res, err := http.Get(requestURL)
 			if err != nil {
@@ -78,12 +80,20 @@ func main() {
 			json.Unmarshal(resBody, &response)
 			if len(response.Data.Entries) > 0 {
 				fmt.Printf("⚠ %s \n", bin.BinName)
+				cves := []CveMatch{}
 				for _, cve := range response.Data.Entries {
 					fmt.Printf("  - %s \n", cve)
+					cves = append(cves, CveMatch{Id: cve})
 				}
+				binariesReportData.BinariesData[i].Cves = cves
 			} else {
 				fmt.Printf("✓ %s \n", bin.BinName)
 			}
+		}
+
+		if len(outpath) > 0 {
+			dataJson, _ := json.MarshalIndent(binariesReportData, "", "  ")
+			os.WriteFile(outpath, []byte(dataJson), 0770)
 		}
 
 		println("")

@@ -5,6 +5,7 @@ import (
 	"context"
 	"fmt"
 	"os/exec"
+	"syscall"
 	"time"
 )
 
@@ -13,6 +14,9 @@ func RunWithTimeout(path string, args ...string) (string, string, error) {
 	defer cancel()
 
 	cmd := exec.CommandContext(ctx, path, args...)
+	cmd.SysProcAttr = &syscall.SysProcAttr{
+		Setsid: true,
+	}
 	cmd.Stdin = bytes.NewReader([]byte{})
 
 	var stdout, stderr bytes.Buffer
