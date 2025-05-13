@@ -7,7 +7,8 @@ import (
 	"net/http"
 	"os"
 	"regexp"
-	"vultures/utils"
+
+	"github.com/noreplydev/vultures/apps/vultures-cli/utils"
 )
 
 type CveMatch struct {
