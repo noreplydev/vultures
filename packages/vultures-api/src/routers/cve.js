@@ -1,7 +1,9 @@
 import { app } from "../app.js";
 import { getDb } from "../db/index.js";
+import { getCveExtradata } from "../lib/cve/index.js";
 import { DefaultData, response, responseError } from "../response.js";
 
+const cveRegex = /^CVE-\d{4}-\d{4,}$/;
 export const CveRouter = app()
 
 CveRouter.get("/search", async (req, res) => {
@@ -25,9 +27,13 @@ CveRouter.get("/search", async (req, res) => {
 CveRouter.get("/:id", async (req, res) => {
   try {
     const cveId = req.params.id
+    if (!cveRegex.test(cveId)) {
+      return responseError(res, 400, { entry: null, extradata: null }, "provided bad id format")
+    }
     const db = await getDb("cve")
     const entry = await db.get(cveId)
-    response(res, { entry }, "specific cve data")
+    const extradata = await getCveExtradata(cveId)
+    response(res, { entry, extradata }, "specific cve data")
   } catch (err) {
     console.error("Error processing /api/v0/cve: ", err)
     return responseError(res, 500, DefaultData, "Internal server error")
